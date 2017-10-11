@@ -58,51 +58,30 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _buildText() {
+    return new Text('Example', textScaleFactor: 2.0);
+  }
+
   Widget _buildColumn() {
     return new Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        new Text(
-          'You have pushed the\nbutton this many times:',
-        ),
-        new Text(
-          '$_counter',
-          style: Theme.of(context).textTheme.display1,
-        ),
+        _buildText(),
       ],
     );
   }
 
-  Widget _buildConstrainedBox() {
+  Widget _wrapConstrainedBox(Widget child) {
     return new ConstrainedBox(
-      constraints: new BoxConstraints(minHeight: 60.0, maxHeight: 200.0),
-      child: new Column(
-        children: [
-          new Text(
-            'You have pushed the\nbutton this many times:',
-          ),
-          new Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.display1,
-          ),
-        ],
-      ),
+      constraints: new BoxConstraints(minHeight: 100.0),
+      child: child,
     );
   }
 
   Widget _buildUnconstrainedBox() {
     return new UnconstrainedBox(
-      child:  new Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          new Text('You have pushed the\nbutton this many times:'),
-          new Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.display1,
-          ),
-        ],
-      ),
+      child: _buildText(),
     );
   }
 
@@ -127,19 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
           new Center(
             child: new Container(
               decoration: new BoxDecoration(color: Colors.green),
-              child: _buildColumn(),
+              child: _wrapConstrainedBox(_buildText()),
             ),
           ),
           new Center(
             child: new Container(
-              decoration: new BoxDecoration(color: Colors.green),
-              child: _buildConstrainedBox(),
+              decoration: new BoxDecoration(color: Colors.red),
+              child: _wrapConstrainedBox(_buildColumn()),
             ),
           ),
           new Center(
             child: new Container(
-              decoration: new BoxDecoration(color: Colors.green),
-              child: _buildUnconstrainedBox(),
+              decoration: new BoxDecoration(color: Colors.blue),
+              child: _wrapConstrainedBox(_buildUnconstrainedBox()),
             ),
           ),
         ],
