@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   _MyHomePageState() {
     Decoration endDecoration = new ShapeDecoration(
       color: Colors.grey,
-      shape: new CircleBorder(purpleSide),
+      shape: new RoundedRectangleBorder(side: purpleSide),
     );
     Decoration startDecoration = new ShapeDecoration(
       color: Colors.grey,
@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         debugLabel: "BorderAnimator",
         lowerBound: 0.0,
         upperBound: 1.0,
-        duration: new Duration(milliseconds: 500),
+        duration: new Duration(milliseconds: 1000),
         value: 0.0);
     _controller.addStatusListener((AnimationStatus status) {
       if (status == AnimationStatus.completed) {
@@ -60,8 +60,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 //    _controller.addListener(() {
 //      print ("Animation: ${_controller.value}");
 //    });
-//    _animation = tween.animate(new CurveTween(curve: Curves.elasticInOut).animate(_controller));
-    _animation = tween.animate(_controller);
+    _animation = tween.animate(new CurveTween(curve: Curves.easeInOut).animate(_controller));
+//    _animation = tween.animate(_controller);
     _animation.addListener(() {
       setState((){
         _value = _animation.value;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(new MyApp());
@@ -31,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double _size = 10.0;
   @override
   Widget build(BuildContext context) {
+    debugPaintSizeEnabled = true;
     return new DefaultTextStyle(
       style: new TextStyle(
           color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
@@ -43,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: new ConstrainedBox(
               constraints: new BoxConstraints(maxWidth: 200.0, maxHeight: 200.0),
               child: new UnconstrainedBox(
+                alignment: AlignmentDirectional.center,
                 child: new Container(
                   decoration: new BoxDecoration(color: Colors.deepOrange),
                   width: _size,
@@ -55,13 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
           new Container(
             decoration: new BoxDecoration(border: new Border.all(color: Colors.blue, width: 4.0)),
             constraints: new BoxConstraints.tight(const Size.fromRadius(100.0)),
-            child: new Column(
-              children: <Widget>[
+            child:
                 new UnconstrainedBox(
+                  alignment: AlignmentDirectional.center,
                   child: new Text("Testing", textScaleFactor: _size/10.0),
                 ),
-              ],
-            ),
+
+
           ),
           new Divider(),
           new Flexible(child: new Container()),
