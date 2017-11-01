@@ -35,15 +35,19 @@ class _MyHomePageState extends State<MyHomePage> {
     debugPaintSizeEnabled = true;
     return new DefaultTextStyle(
       style: new TextStyle(
-          color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
+          color: Colors.white,
+          fontSize: 14.0,
+          fontFamily: 'Roboto',
+          fontStyle: FontStyle.normal),
       child: new Material(
         child: new Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
           new Padding(padding: const EdgeInsets.only(top: 30.0)),
           new Container(
-            decoration: new BoxDecoration(border: new Border.all(color: Colors.blue, width: 4.0)),
-            constraints: new BoxConstraints.tight(const Size.fromRadius(100.0)),
+            decoration:
+                new BoxDecoration(border: new Border.all(color: Colors.blue, width: 4.0)),
+            constraints: new BoxConstraints.tight(const Size(200.0, 100.0)),
             child: new ConstrainedBox(
-              constraints: new BoxConstraints(maxWidth: 200.0, maxHeight: 200.0),
+              constraints: new BoxConstraints(maxWidth: 200.0, maxHeight: 100.0),
               child: new UnconstrainedBox(
                 alignment: AlignmentDirectional.center,
                 child: new Container(
@@ -56,15 +60,25 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new Divider(),
           new Container(
-            decoration: new BoxDecoration(border: new Border.all(color: Colors.blue, width: 4.0)),
-            constraints: new BoxConstraints.tight(const Size.fromRadius(100.0)),
-            child:
-                new UnconstrainedBox(
-                  alignment: AlignmentDirectional.center,
-                  child: new Text("Testing", textScaleFactor: _size/10.0),
+            decoration:
+                new BoxDecoration(border: new Border.all(color: Colors.blue, width: 4.0)),
+            constraints: new BoxConstraints.tight(const Size(200.0, 100.0)),
+            child: new UnconstrainedBox(
+              alignment: AlignmentDirectional.centerStart,
+              child: new Text("Testing", textScaleFactor: _size / 10.0),
+            ),
+          ),
+          new Divider(),
+          new Column(
+            children: <Widget>[
+              new Directionality(
+                textDirection: TextDirection.rtl,
+                child: new UnconstrainedBox(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: new Text("Testing", textScaleFactor: _size / 10.0),
                 ),
-
-
+              ),
+            ],
           ),
           new Divider(),
           new Flexible(child: new Container()),

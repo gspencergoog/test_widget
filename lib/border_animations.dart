@@ -37,7 +37,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
     Decoration startDecoration = new ShapeDecoration(
       color: Colors.grey,
-      shape: new StadiumBorder(side: redSide),
+      shape: new RoundedRectangleBorder(side: redSide),
+    //  shape: new StadiumBorder(side: redSide),
     );
     DecorationTween tween = new DecorationTween(begin: startDecoration, end: endDecoration);
 
@@ -121,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               height: 100.0,
               decoration: new ShapeDecoration(
                 color: Colors.grey,
-                shape: new StadiumBorder(side: redSide),//.lerpTo(new RoundedRectangleBorder(side: redSide), 0.0),
+                shape: new RoundedRectangleBorder(side: redSide),
+               // shape: new StadiumBorder(side: redSide),//.lerpTo(new RoundedRectangleBorder(side: redSide), 0.0),
               ),
             ),
           ],
