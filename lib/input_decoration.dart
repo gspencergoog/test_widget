@@ -76,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           new Flexible(child: new Container()),
+          new TextField(),
           new Column(
             children: <Widget>[
               new Row(children: <Widget>[
@@ -116,7 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
               new Slider(
                   min: 1.0,
                   max: 10.0,
-                  divisions: 18,
                   onChanged: (double value) {
                     setState(() {
                       _textScale = value;
