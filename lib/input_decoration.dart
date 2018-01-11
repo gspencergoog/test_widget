@@ -57,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                       : new InputDecoration(
                           isDense: _isDense,
-                          hideDivider: _hideDivider,
                           icon: new Icon(Icons.android),
                           labelText: "Labelp",
                           hintText: "Hintp",

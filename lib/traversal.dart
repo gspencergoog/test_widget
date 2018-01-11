@@ -28,6 +28,10 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
+class GroupSortKey extends OrdinalSortKey {
+  const GroupSortKey(double order, {String name}) : super(order, name: name);
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   static bool multiLayer = false;
 
@@ -35,14 +39,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Semantics(
       sortKey: new GroupSortKey(col.toDouble()),
       child: new Semantics(
-        sortKey: new LinearSortKey(row.toDouble()),
-        label: '$row, $col',
-        child: new ExcludeSemantics(
-          child: new ConstrainedBox(
-            constraints: new BoxConstraints.tight(const Size.fromRadius(50.0)),
-            child: new Center(
-              child: new Text('$row, $col', style: Theme.of(context).textTheme.display1),
-            ),
+        sortKey: new OrdinalSortKey(row.toDouble()),
+        container: true,
+        child: new ConstrainedBox(
+          constraints: new BoxConstraints.tight(const Size.fromRadius(50.0)),
+          child: new Center(
+            child: new Text('$row, $col', style: Theme.of(context).textTheme.display1),
           ),
         ),
       ),
@@ -54,16 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
       sortOrder: new SemanticsSortOrder(
         keys: <SemanticsSortKey>[
           new GroupSortKey(col.toDouble()),
-          new LinearSortKey(row.toDouble())
+          new OrdinalSortKey(row.toDouble())
         ],
       ),
-      label: '$row, $col',
-      child: new ExcludeSemantics(
-        child: new ConstrainedBox(
-          constraints: new BoxConstraints.tight(const Size.fromRadius(50.0)),
-          child: new Center(
-            child: new Text('$row, $col', style: Theme.of(context).textTheme.display1),
-          ),
+      container: true,
+      child: new ConstrainedBox(
+        constraints: new BoxConstraints.tight(const Size.fromRadius(50.0)),
+        child: new Center(
+          child: new Text('$row, $col', style: Theme.of(context).textTheme.display1),
         ),
       ),
     );
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return new Semantics(
         sortKey: new GroupSortKey(1.0),
         child: new Semantics(
-          sortKey: new LinearSortKey(3.0),
+          sortKey: new OrdinalSortKey(3.0),
           label: 'Center',
           child: new ExcludeSemantics(
             child: _makeMultilayerCell(context, 1, 1),
@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       return new Semantics(
         sortOrder: new SemanticsSortOrder(
-          keys: <SemanticsSortKey>[new GroupSortKey(1.0), new LinearSortKey(3.0)],
+          keys: <SemanticsSortKey>[new GroupSortKey(1.0), new OrdinalSortKey(3.0)],
         ),
         label: "Center",
         child: new ExcludeSemantics(
@@ -110,9 +110,18 @@ class _MyHomePageState extends State<MyHomePage> {
             new Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                const Text(' Col A ', textScaleFactor: 2.0),
+                const Text(' Col B ', textScaleFactor: 2.0),
+                const Text(' Col C ', textScaleFactor: 2.0),
+              ],
+            ),
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
                 _makeCell(context, 0, 0),
                 _makeCell(context, 0, 1),
                 _makeCell(context, 0, 2),
+                const Text(' Row A ', textScaleFactor: 2.0),
               ],
             ),
             new Row(
@@ -121,14 +130,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 _makeCell(context, 1, 0),
                 _makeCenterCell(context),
                 _makeCell(context, 1, 2),
+                const Text(' Row B ', textScaleFactor: 2.0),
               ],
             ),
             new Row(
+
+
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 _makeCell(context, 2, 0),
                 _makeCell(context, 2, 1),
                 _makeCell(context, 2, 2),
+                const Text(' Row C ', textScaleFactor: 2.0),
               ],
             )
           ],
