@@ -34,10 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new DefaultTextStyle(
       style: new TextStyle(
-          color: Colors.white,
-          fontSize: 14.0,
-          fontFamily: 'Roboto',
-          fontStyle: FontStyle.normal),
+          color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
       child: new Material(
         child: new MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: _size),
@@ -54,12 +51,38 @@ class _MyHomePageState extends State<MyHomePage> {
                 dense: false,
               ),
               new Divider(),
+              new TextField(
+                maxLength: 100,
+                decoration: new InputDecoration(
+                  hintText: 'Enter Text Here',
+                  labelText: 'Label',
+                  icon: new CircleAvatar(child: const Icon(Icons.label)),
+                ),
+              ),
+              new Divider(),
+              new TextField(
+                maxLength: 100,
+                decoration: new InputDecoration(
+                  hintText: 'Or Enter Text Here',
+                  labelText: 'Another Label',
+                  icon: new CircleAvatar(child: const Icon(Icons.portrait)),
+                ),
+              ),
+              new Divider(),
+              new Chip(
+                label: const Text('Chip Taylor'),
+                backgroundColor: Colors.lightBlue,
+                avatar: new CircleAvatar(child: const Text('C')),
+              ),
+              new Divider(),
               new Flexible(child: new Container()),
               new Column(
                 children: <Widget>[
                   new Slider(
-                      min: 0.5,
-                      max: 10.0,
+                      label: '$_size',
+                      min: 0.25,
+                      max: 9.5 / 2.0,
+                      divisions: 18,
                       onChanged: (double value) {
                         setState(() {
                           _size = value;
