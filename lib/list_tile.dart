@@ -30,6 +30,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _size = 1.0;
+  double _testValue = 1.0;
   @override
   Widget build(BuildContext context) {
     return new DefaultTextStyle(
