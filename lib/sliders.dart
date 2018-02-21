@@ -67,108 +67,112 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new DefaultTextStyle(
-      style: new TextStyle(
-          color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
-      child: new Material(
-        child: new MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: _size),
-          child: new Padding(
-            padding: new EdgeInsets.all(20.0),
-            child: new Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                new Padding(padding: const EdgeInsets.only(top: 60.0)),
-                const Text(
-                  'M2 Sliders',
-                  style: const TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
-                ),
-                _wrapSlider(
-                  'Discrete',
-                  new Slider(
+    return new Theme(
+      data: new ThemeData.light(),
+      child: new DefaultTextStyle(
+        style: new TextStyle(
+            color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
+        child: new Material(
+          child: new MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: _size),
+            child: new Padding(
+              padding: new EdgeInsets.all(20.0),
+              child: new Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  new Padding(padding: const EdgeInsets.only(top: 60.0)),
+                  const Text(
+                    'M2 Sliders',
+                    style: const TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+                  ),
+                  _wrapSlider(
+                    'Continuous',
+                    new Slider(
+                      label: '$_testValue',
+                      min: 0.0,
+                      max: 18.0,
+                      onChanged: _setValue,
+                      value: sliderValue),
+                  ),
+                  new Divider(),
+                  new Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: _wrapSlider(
+                      'RTL Discrete',
+                      new Slider(
+                          label: '$_testValue',
+                          min: 0.0,
+                          max: 18.0,
+                          divisions: 9,
+                          onChanged: _setValue,
+                          value: sliderValue),
+                    ),
+                  ),
+                  new Divider(),
+                  _wrapSlider(
+                    'Disabled Discrete',
+                    new Slider(
+                      label: '0.0',
+                      min: 10.0,
+                      max: 10.0,
+                      divisions: 9,
+                      onChanged: null,
+                      value: 10.0,
+                    ),
+                  ),
+                  new Divider(),
+                  _wrapSlider(
+                    'Discrete',
+                    new Slider(
                       label: '$_testValue',
                       min: 0.0,
                       max: 18.0,
                       divisions: 9,
+                      activeColor:  new Color.fromARGB(200, 50, 50, 200),
                       onChanged: _setValue,
                       value: sliderValue),
-                ),
-                new Divider(),
-                new Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: _wrapSlider(
-                    'RTL Discrete',
+                  ),
+                  new Divider(),
+                  _wrapSlider(
+                    'Disabled Cont',
                     new Slider(
-                        label: '$_testValue',
-                        min: 0.0,
-                        max: 18.0,
-                        divisions: 9,
-                        onChanged: _setValue,
-                        value: sliderValue),
-                  ),
-                ),
-                new Divider(),
-                _wrapSlider(
-                  'Disabled Discrete',
-                  new Slider(
-                    label: '0.0',
-                    min: 10.0,
-                    max: 10.0,
-                    divisions: 9,
-                    onChanged: null,
-                    value: 10.0,
-                  ),
-                ),
-                new Divider(),
-                _wrapSlider(
-                  'Continuous',
-                  new Slider(
-                      label: '$_testValue',
-                      min: 0.0,
-                      max: 18.0,
-                      onChanged: _setValue,
-                      value: sliderValue),
-                ),
-                new Divider(),
-                _wrapSlider(
-                  'Disabled Continuous',
-                  new Slider(
-                    label: '0.0',
-                    min: 10.0,
-                    max: 10.0,
-                    onChanged: null,
-                    value: 10.0,
-                  ),
-                ),
-                new Divider(),
-                new Flexible(child: new Container()),
-                new Row(
-                  children: <Widget>[
-                    new Expanded(
-                        child: new Slider(
-                            label: '$_size',
-                            min: 0.25,
-                            max: 9.5 / 2.0,
-                            divisions: 18 * 2,
-                            onChanged: (double value) {
-                              setState(() {
-                                _size = value;
-                              });
-                            },
-                            value: _size)),
-                    new MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          _size = 1.0;
-                          _testValue = 0.0;
-                        });
-                      },
-                      child: const Text('Reset'),
+                      label: '0.0',
+                      min: 10.0,
+                      max: 10.0,
+                      onChanged: null,
+                      value: 10.0,
                     ),
-                  ],
-                ),
-                new Text("Text Scale Factor: $_size", textScaleFactor: 1.0),
-              ],
+                  ),
+                  new Divider(),
+                  new Flexible(child: new Container()),
+                  new Row(
+                    children: <Widget>[
+                      new Expanded(
+                          child: new Slider(
+                              label: '$_size',
+                              min: 0.25,
+                              max: 9.5 / 2.0,
+                              divisions: 18 * 2,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _size = value;
+                                });
+                              },
+                              value: _size)),
+                      new MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            _size = 1.0;
+                            _testValue = 0.0;
+                          });
+                        },
+                        child: const Text('Reset'),
+                      ),
+                    ],
+                  ),
+                  new Text("Text Scale Factor: $_size", textScaleFactor: 1.0),
+                ],
+              ),
             ),
           ),
         ),
