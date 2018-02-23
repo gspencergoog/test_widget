@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'dart:ui' show window;
-
 void main() {
   runApp(new MyApp());
 }
