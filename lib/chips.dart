@@ -46,11 +46,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _size = 3.0;
+  double _size = 1.0;
   bool _enable = true;
   bool _slowAnimations = false;
   bool _rtl = false;
-  bool _longText = true;
+  bool _longText = false;
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void _setValue(double value) {
@@ -190,9 +190,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     setState(() {
                       _size = 1.0;
-                      _enable = true;
-                      _slowAnimations = false;
-                      _longText = false;
                       sliderValue = 0.0;
                       testValue = 1;
                     });
@@ -279,7 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: new MediaQuery(
                     data: MediaQuery.of(context).copyWith(textScaleFactor: _size),
                     child: new ListView(
-                      padding: new EdgeInsets.all(0.0),
+                      padding: new EdgeInsets.all(20.0),
                       children: tiles,
                     ),
                   ),
