@@ -53,16 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _longText = false;
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  void _setValue(double value) {
-    setState(() {
-      sliderValue = value;
-      testValue = _longText ? pow(2, value).round() : value.round();
-    });
-  }
-
-  double sliderValue = 0.0;
-  int testValue = 1;
-
   Widget _buildControls(BuildContext context) {
     final SliderThemeData controlTheme = SliderTheme.of(context).copyWith(
           thumbColor: Colors.grey[50],
@@ -190,8 +180,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     setState(() {
                       _size = 1.0;
-                      sliderValue = 0.0;
-                      testValue = 1;
+                      _enable = true;
+                      _slowAnimations = false;
+                      _rtl = false;
+                      _longText = false;
                     });
                   },
                   child: new Text(
@@ -207,48 +199,29 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _wrapSlider(String label, Widget slider, int value) {
+  Widget _wrapChip(String label, Widget chip) {
     return new ListTile(
       title: new Text(label, textAlign: TextAlign.start),
-      subtitle: slider,
+      subtitle: chip,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-//    Secondary	#191919
-//    Dark	#000000
-//    Light	#FFFFFF
-//    Error	#FF1744
-
     ThemeData theme1 = new ThemeData(
       primarySwatch: m2Swatch,
     );
     SliderThemeData theme2 = theme1.sliderTheme;
 
     List<Widget> tiles = <Widget>[
-      _wrapSlider(
-        _rtl ? 'مستمر' : 'Continuous',
-        new Slider(
-            label: '$testValue',
-            min: 0.0,
-            max: 20.0,
-            onChanged: _enable ? _setValue : null,
-            value: sliderValue),
-        testValue,
+      _wrapChip(
+        _rtl ? 'تدوين' : 'Entry',
+        new Chip(
+          label: new Text(_rtl ? 'ضع الكلمة المناسبة' : 'Label'),
+          avatar: new CircleAvatar(child: new Icon(Icons.camera), radius: 12.0),
+          onDeleted: () {},
+        ),
       ),
-      _wrapSlider(
-        _rtl ? 'منفصله' : 'Discrete',
-        new Slider(
-            label: '$testValue',
-            min: 0.0,
-            max: 20.0,
-            divisions: 10,
-            onChanged: _enable ? _setValue : null,
-            value: sliderValue),
-        testValue,
-      ),
-      new Center(child: new Text('Set Value: $testValue')),
     ];
     tiles = ListTile.divideTiles(context: context, tiles: tiles).toList();
 
@@ -256,15 +229,11 @@ class _MyHomePageState extends State<MyHomePage> {
       child: new Theme(
         data: theme1,
         child: new DefaultTextStyle(
-          style: new TextStyle(
-              color: Colors.white,
-              fontSize: 14.0,
-              fontFamily: 'Roboto',
-              fontStyle: FontStyle.normal),
+          style: new TextStyle(color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
           child: new Scaffold(
             key: scaffoldKey,
             appBar: new AppBar(
-              title: new Text('M2 Slider'),
+              title: new Text('M2 Chips'),
               bottom: _buildControls(context),
               backgroundColor: const Color(0xff323232),
             ),

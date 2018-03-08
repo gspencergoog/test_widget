@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' show window;
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -46,11 +47,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _size = 3.0;
+  double _size = 1.0;
   bool _enable = true;
   bool _slowAnimations = false;
   bool _rtl = false;
-  bool _longText = true;
+  bool _longText = false;
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void _setValue(double value) {
@@ -278,6 +279,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   data: theme2,
                   child: new MediaQuery(
                     data: MediaQuery.of(context).copyWith(textScaleFactor: _size),
+//                    data: new MediaQueryData(
+//                      textScaleFactor: 2.0,
+//                      size: window.physicalSize / window.devicePixelRatio,
+//                      padding: const EdgeInsets.all(100.0),
+//                      viewInsets: const EdgeInsets.all(50.0),
+//                    ),
                     child: new ListView(
                       padding: new EdgeInsets.all(0.0),
                       children: tiles,
