@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui' show window;
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -28,11 +27,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'UnconstrainedBox Test Code',
+      title: 'Chips Test',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'UnconstrainedBox Test'),
+      home: new MyHomePage(title: 'Chips Test'),
     );
   }
 }

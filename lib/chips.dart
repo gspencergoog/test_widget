@@ -27,11 +27,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'UnconstrainedBox Test Code',
+      title: 'M2 Chips',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'UnconstrainedBox Test'),
+      home: new MyHomePage(title: 'M2 Chips'),
     );
   }
 }
@@ -51,7 +51,25 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _slowAnimations = false;
   bool _rtl = false;
   bool _longText = false;
+  bool _actionToggle = false;
+  bool _deleteToggle = false;
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  Widget _buildCheckbox({ValueChanged<bool> onChanged, bool value, String label}) {
+    return new Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        new Checkbox(
+          onChanged: onChanged,
+          value: value,
+        ),
+        new Text(
+          label,
+          style: new TextStyle(color: Colors.grey[50]),
+        ),
+      ],
+    );
+  }
 
   Widget _buildControls(BuildContext context) {
     final SliderThemeData controlTheme = SliderTheme.of(context).copyWith(
@@ -101,80 +119,48 @@ class _MyHomePageState extends State<MyHomePage> {
             new Wrap(
               alignment: WrapAlignment.center,
               children: [
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _enable = checked;
-                        });
-                      },
-                      value: _enable,
-                    ),
-                    new Text(
-                      'Enabled',
-                      style: new TextStyle(color: Colors.grey[50]),
-                    ),
-                  ],
+                _buildCheckbox(
+                  onChanged: (bool checked) {
+                    setState(() {
+                      _enable = checked;
+                    });
+                  },
+                  value: _enable,
+                  label: 'Enabled',
                 ),
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _slowAnimations = checked;
-                        });
-                        new Future.delayed(new Duration(milliseconds: 150)).then((dynamic _) {
-                          if (_slowAnimations) {
-                            timeDilation = 20.0;
-                          } else {
-                            timeDilation = 1.0;
-                          }
-                        });
-                      },
-                      value: _slowAnimations,
-                    ),
-                    new Text(
-                      'Slow',
-                      style: new TextStyle(color: Colors.grey[50]),
-                    ),
-                  ],
+                _buildCheckbox(
+                  onChanged: (bool checked) {
+                    setState(() {
+                      _slowAnimations = checked;
+                    });
+                    new Future.delayed(new Duration(milliseconds: 150)).then((dynamic _) {
+                      if (_slowAnimations) {
+                        timeDilation = 20.0;
+                      } else {
+                        timeDilation = 1.0;
+                      }
+                    });
+                  },
+                  value: _slowAnimations,
+                  label: 'Slow',
                 ),
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _rtl = checked;
-                        });
-                      },
-                      value: _rtl,
-                    ),
-                    new Text(
-                      'RTL',
-                      style: new TextStyle(color: Colors.grey[50]),
-                    ),
-                  ],
+                _buildCheckbox(
+                  onChanged: (bool checked) {
+                    setState(() {
+                      _rtl = checked;
+                    });
+                  },
+                  value: _rtl,
+                  label: 'RTL',
                 ),
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _longText = checked;
-                        });
-                      },
-                      value: _longText,
-                    ),
-                    new Text(
-                      'Long Label',
-                      style: new TextStyle(color: Colors.grey[50]),
-                    ),
-                  ],
+                _buildCheckbox(
+                  onChanged: (bool checked) {
+                    setState(() {
+                      _longText = checked;
+                    });
+                  },
+                  value: _longText,
+                  label: 'Long Label',
                 ),
                 new MaterialButton(
                   onPressed: () {
@@ -212,15 +198,97 @@ class _MyHomePageState extends State<MyHomePage> {
       primarySwatch: m2Swatch,
     );
     SliderThemeData theme2 = theme1.sliderTheme;
-
+    final String label = _rtl ? (_longText ? 'תווית ארוכה מאוד תווית ארוכה מאוד' : 'תווית ארוכה מאוד') : (_longText ? 'This is a long long label' : 'Label');
     List<Widget> tiles = <Widget>[
       _wrapChip(
-        _rtl ? 'تدوين' : 'Entry',
+        _rtl ? 'لا زينة' : 'No Decorations',
         new Chip(
-          label: new Text(_rtl ? 'ضع الكلمة المناسبة' : 'Label'),
-          avatar: new CircleAvatar(child: new Icon(Icons.camera), radius: 12.0),
-          onDeleted: () {},
+          label: new Text(
+            label,
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+            textAlign: TextAlign.start,
+            textDirection: _rtl ? TextDirection.rtl : TextDirection.ltr,
+          ),
+          onAction: () {
+            print('Action Pressed');
+            setState(() {
+              _actionToggle = !_actionToggle;
+            });
+          },
         ),
+      ),
+      _wrapChip(
+        _rtl ? 'العمل فقط' : 'Action Only',
+        new Chip(
+          label: new Text(label),
+          avatar: new CircleAvatar(child: new Icon(Icons.bluetooth, size: 24.0), radius: 12.0),
+          onAction: () {
+            print('Action Pressed');
+            setState(() {
+              _actionToggle = !_actionToggle;
+            });
+          },
+        ),
+      ),
+      _wrapChip(
+        _rtl ? 'حذف فقط' : 'Delete Only',
+        new Chip(
+          label: new Text(label),
+          onDeleted: () {
+            print('Delete Pressed');
+            setState(() {
+              _deleteToggle = !_deleteToggle;
+            });
+          },
+        ),
+      ),
+      _wrapChip(
+        _rtl ? 'جميع الاوسمة' : 'All Decorations',
+        new Chip(
+          label: new Text(label),
+          avatar: new CircleAvatar(child: new Icon(Icons.bluetooth, size: 24.0), radius: 12.0),
+          onDeleted: () {
+            print('Delete Pressed');
+            setState(() {
+              _deleteToggle = !_deleteToggle;
+            });
+          },
+          onAction: () {
+            print('Action Pressed');
+            setState(() {
+              _actionToggle = !_actionToggle;
+            });
+          },
+        ),
+      ),
+      _wrapChip(
+        _rtl ? 'جميع الاوسمة' : 'Placeholders',
+        new Chip(
+          label: new Text(label),
+          avatar: new Placeholder(),
+          deleteIcon: new Placeholder(),
+          onDeleted: () {
+            print('Delete Pressed');
+            setState(() {
+              _deleteToggle = !_deleteToggle;
+            });
+          },
+          onAction: () {
+            print('Action Pressed');
+            setState(() {
+              _actionToggle = !_actionToggle;
+            });
+          },
+        ),
+      ),
+      new Row(
+        children: <Widget>[
+          new Container(color: _actionToggle ? Colors.red : Colors.green, width: 30.0, height: 30.0),
+          new Flexible(child: new Container()),
+          new Container(color: _deleteToggle ? Colors.blue : Colors.purple, width: 30.0, height: 30.0),
+        ],
       ),
     ];
     tiles = ListTile.divideTiles(context: context, tiles: tiles).toList();
