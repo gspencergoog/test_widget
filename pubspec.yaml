@@ -20,6 +20,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the Icons class.
   uses-material-design: true
+  
+  assets:
+    - assets/taylor.png
 
 sky_engine:
   path: ../engine/src/out/host_debug_unopt/gen/dart-pkg/sky_engine

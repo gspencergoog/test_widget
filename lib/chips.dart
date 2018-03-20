@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -53,6 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _longText = false;
   bool _actionToggle = false;
   bool _deleteToggle = false;
+  bool _selected = false;
+  bool _activated = false;
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Widget _buildCheckbox({ValueChanged<bool> onChanged, bool value, String label}) {
@@ -185,10 +186,17 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _wrapChip(String label, Widget chip) {
+  Widget _wrapChip(String label, List<Widget> chips) {
     return new ListTile(
       title: new Text(label, textAlign: TextAlign.start),
-      subtitle: chip,
+      subtitle: new Wrap(
+        children: chips
+            .map((Widget chip) => new Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: chip,
+                ))
+            .toList(),
+      ),
     );
   }
 
@@ -198,90 +206,124 @@ class _MyHomePageState extends State<MyHomePage> {
       primarySwatch: m2Swatch,
     );
     SliderThemeData theme2 = theme1.sliderTheme;
-    final String label = _rtl ? (_longText ? 'תווית ארוכה מאוד תווית ארוכה מאוד' : 'תווית ארוכה מאוד') : (_longText ? 'This is a long long label' : 'Label');
+    final String label = _rtl ? (_longText ? 'טיילור, מהנדס תוכנה בכיר' : 'טיילור') : (_longText ? 'Taylor, Senior Software Engineer' : 'Taylor');
+    final CircleAvatar avatar = new CircleAvatar(backgroundImage: new AssetImage('assets/taylor.png'), minRadius: 0.0);
     List<Widget> tiles = <Widget>[
       _wrapChip(
-        _rtl ? 'لا زينة' : 'No Decorations',
-        new Chip(
-          label: new Text(
-            label,
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.fade,
-            textAlign: TextAlign.start,
-            textDirection: _rtl ? TextDirection.rtl : TextDirection.ltr,
+        _rtl ? 'שְׁבָב' : 'M1 Chip',
+        <Widget>[
+          new Chip(
+            label: new Text(label),
           ),
-          onAction: () {
-            print('Action Pressed');
-            setState(() {
-              _actionToggle = !_actionToggle;
-            });
-          },
-        ),
+          new Chip(
+            label: new Text(label),
+            onDeleted: () {
+              setState(() {
+                _deleteToggle = !_deleteToggle;
+              });
+            },
+          ),
+          new Chip(
+            label: new Text(label),
+            avatar: avatar,
+            onDeleted: () {
+              setState(() {
+                _deleteToggle = !_deleteToggle;
+              });
+            },
+          ),
+        ],
       ),
       _wrapChip(
-        _rtl ? 'العمل فقط' : 'Action Only',
-        new Chip(
-          label: new Text(label),
-          avatar: new CircleAvatar(child: new Icon(Icons.bluetooth, size: 24.0), radius: 12.0),
-          onAction: () {
-            print('Action Pressed');
-            setState(() {
-              _actionToggle = !_actionToggle;
-            });
-          },
-        ),
+        _rtl ? "קלט צ'יפ" : 'Input Chip',
+        <Widget>[
+          new InputChip(
+            label: new Text(label),
+            avatar: avatar,
+            selected: _selected,
+            onChanged: (bool value) {
+              setState(() {
+                _selected = value;
+              });
+            },
+            onPressed: () {
+              print('Action Pressed');
+              setState(() {
+                _actionToggle = !_actionToggle;
+              });
+            },
+          ),
+          new InputChip( // Should be disabled.
+            label: new Text(label),
+            avatar: avatar,
+          ),
+          new InputChip(
+            label: new Text(label),
+            avatar: avatar,
+            onPressed: () {
+              print('Action Pressed');
+              setState(() {
+                _actionToggle = !_actionToggle;
+              });
+            },
+          ),
+          new InputChip(
+            label: new Text(label),
+            avatar: avatar,
+            onDeleted: (() {
+              setState(() {
+                _deleteToggle = !_deleteToggle;
+              });
+            }),
+          ),
+        ],
       ),
       _wrapChip(
-        _rtl ? 'حذف فقط' : 'Delete Only',
-        new Chip(
-          label: new Text(label),
-          onDeleted: () {
-            print('Delete Pressed');
-            setState(() {
-              _deleteToggle = !_deleteToggle;
-            });
-          },
-        ),
+        _rtl ? 'שבב בחירה' : 'Choice Chip',
+        <Widget>[
+          new ChoiceChip(
+            label: new Text(label),
+            avatar: avatar,
+            activated: _activated,
+            onChanged: (bool value) {
+              print('Activate Pressed');
+              setState(() {
+                _activated = value;
+              });
+            },
+          ),
+        ],
       ),
       _wrapChip(
-        _rtl ? 'جميع الاوسمة' : 'All Decorations',
-        new Chip(
-          label: new Text(label),
-          avatar: new CircleAvatar(child: new Icon(Icons.bluetooth, size: 24.0), radius: 12.0),
-          onDeleted: () {
-            print('Delete Pressed');
-            setState(() {
-              _deleteToggle = !_deleteToggle;
-            });
-          },
-          onAction: () {
-            print('Action Pressed');
-            setState(() {
-              _actionToggle = !_actionToggle;
-            });
-          },
-        ),
+        _rtl ? 'שבב מסנן' : 'Filter Chip',
+        <Widget>[
+          new FilterChip(
+            label: new Text(label),
+            avatar: avatar,
+            selected: _selected,
+            onChanged: (bool value) {
+              print('Select Pressed');
+              setState(() {
+                _selected = value;
+              });
+            },
+          ),
+        ],
       ),
       _wrapChip(
-        _rtl ? 'جميع الاوسمة' : 'Placeholders',
-        new Chip(
-          label: new Text(label),
-          avatar: new Placeholder(),
-          deleteIcon: new Placeholder(),
-          onDeleted: () {
-            print('Delete Pressed');
-            setState(() {
-              _deleteToggle = !_deleteToggle;
-            });
-          },
-          onAction: () {
-            print('Action Pressed');
-            setState(() {
-              _actionToggle = !_actionToggle;
-            });
-          },
-        ),
+        _rtl ? 'שבב פעולה' : 'Action Chip',
+        <Widget>[
+          new ActionChip(
+            label: new Text(label),
+            avatar: avatar,
+            onPressed: () {
+              print('Action Pressed');
+              setState(() {
+                _actionToggle = !_actionToggle;
+              });
+            },
+          ),
+        ],
       ),
       new Row(
         children: <Widget>[

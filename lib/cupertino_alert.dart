@@ -48,8 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     showDialog<Null>(
                       context: context,
-                      child: new Builder(
-                        builder: (BuildContext context) => new MediaQuery(
+                      builder: (BuildContext context) => new MediaQuery(
                           data: MediaQuery.of(context).copyWith(textScaleFactor: _size),
                           child: new CupertinoAlertDialog(
                             title: const Text('The Title'),
@@ -68,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ),
                         ),
-                      ),
                     );
                   },
                   child: const Text('Go'),
