@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -15,7 +16,8 @@ final Map<int, Color> m2SwatchColors = <int, Color>{
   800: const Color(0xff270096),
   900: const Color(0xff270096),
 };
-final MaterialColor m2Swatch = new MaterialColor(m2SwatchColors[500].value, m2SwatchColors);
+final MaterialColor m2Swatch =
+    new MaterialColor(m2SwatchColors[500].value, m2SwatchColors);
 
 void main() {
   runApp(new MyApp());
@@ -53,16 +55,28 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _actionToggle = false;
   bool _deleteToggle = false;
   bool _selected = false;
+  bool _selected1 = false;
   bool _activated = false;
-  static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+      new GlobalKey<ScaffoldState>();
 
-  Widget _buildCheckbox({ValueChanged<bool> onChanged, bool value, String label}) {
+  Widget _buildCheckbox(
+      {ValueChanged<bool> onChanged, bool value, String label}) {
     return new Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         new Checkbox(
           onChanged: onChanged,
           value: value,
+//          activeMargin: const EdgeInsets.all(13.0),
+//          activePadding: const EdgeInsets.all(4.0),
+//          activeBorder: const RoundedRectangleBorder(
+//            borderRadius: const BorderRadius.all(const Radius.circular(15.0)),
+//            side: const BorderSide(
+//              width: 2.0,
+//              color: Colors.red,
+//            ),
+//          ),
         ),
         new Text(
           label,
@@ -134,7 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     setState(() {
                       _slowAnimations = checked;
                     });
-                    new Future.delayed(new Duration(milliseconds: 150)).then((dynamic _) {
+                    new Future.delayed(new Duration(milliseconds: 150))
+                        .then((dynamic _) {
                       if (_slowAnimations) {
                         timeDilation = 20.0;
                       } else {
@@ -206,8 +221,13 @@ class _MyHomePageState extends State<MyHomePage> {
       primarySwatch: m2Swatch,
     );
     SliderThemeData theme2 = theme1.sliderTheme;
-    final String label = _rtl ? (_longText ? 'טיילור, מהנדס תוכנה בכיר' : 'טיילור') : (_longText ? 'Taylor, Senior Software Engineer' : 'Taylor');
-    final CircleAvatar avatar = new CircleAvatar(backgroundImage: new AssetImage('assets/taylor.png'), minRadius: 0.0);
+    final String label = _rtl
+        ? (_longText ? 'טיילור, מהנדס תוכנה בכיר' : 'טיילור')
+        : (_longText ? 'Taylor, Senior Software Engineer' : 'Taylor');
+    final CircleAvatar avatar = new CircleAvatar(
+        backgroundImage: new AssetImage('assets/taylor.png'),
+        backgroundColor: Colors.white,
+        minRadius: 0.0);
     List<Widget> tiles = <Widget>[
       _wrapChip(
         _rtl ? 'שְׁבָב' : 'M1 Chip',
@@ -238,30 +258,21 @@ class _MyHomePageState extends State<MyHomePage> {
         _rtl ? "קלט צ'יפ" : 'Input Chip',
         <Widget>[
           new InputChip(
-            label: new Text(label),
-            avatar: avatar,
+            label: new Text(label + ' i1'),
+            avatar: _selected1 ? avatar : null,
             selected: _selected,
+            isEnabled: _enable,
             onChanged: (bool value) {
               setState(() {
                 _selected = value;
               });
             },
-            onPressed: () {
-              print('Action Pressed');
-              setState(() {
-                _actionToggle = !_actionToggle;
-              });
-            },
-          ),
-          new InputChip( // Should be disabled.
-            label: new Text(label),
-            avatar: avatar,
           ),
           new InputChip(
             label: new Text(label),
-            avatar: avatar,
+            avatar: _selected1 ? avatar : null,
+            isEnabled: _enable,
             onPressed: () {
-              print('Action Pressed');
               setState(() {
                 _actionToggle = !_actionToggle;
               });
@@ -269,12 +280,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           new InputChip(
             label: new Text(label),
-            avatar: avatar,
-            onDeleted: (() {
+            avatar: _selected1 ? avatar : null,
+            isEnabled: _enable,
+            onDeleted: () {
               setState(() {
                 _deleteToggle = !_deleteToggle;
               });
-            }),
+            },
+          ),
+          new InputChip(
+            label: new Text(label),
+            isEnabled: _enable,
+            onDeleted: () {
+              setState(() {
+                _deleteToggle = !_deleteToggle;
+              });
+            },
+          ),
+          new InputChip(
+            label: new Text(label),
+            isEnabled: _enable,
+            onPressed: () {
+              setState(() {
+                _actionToggle = !_actionToggle;
+              });
+            },
           ),
         ],
       ),
@@ -285,12 +315,24 @@ class _MyHomePageState extends State<MyHomePage> {
             label: new Text(label),
             avatar: avatar,
             activated: _activated,
-            onChanged: (bool value) {
-              print('Activate Pressed');
-              setState(() {
-                _activated = value;
-              });
-            },
+            onChanged: _enable
+                ? (bool value) {
+                    setState(() {
+                      _activated = value;
+                    });
+                  }
+                : null,
+          ),
+          new ChoiceChip(
+            label: new Text(label),
+            activated: !_activated,
+            onChanged: _enable
+                ? (bool value) {
+                    setState(() {
+                      _activated = !value;
+                    });
+                  }
+                : null,
           ),
         ],
       ),
@@ -298,15 +340,30 @@ class _MyHomePageState extends State<MyHomePage> {
         _rtl ? 'שבב מסנן' : 'Filter Chip',
         <Widget>[
           new FilterChip(
-            label: new Text(label),
+            label: new Text(label + ' f1'),
+            avatar: new BackdropFilter(
+              child: avatar,
+              filter: new ui.ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+            ),
+            selected: _selected1,
+            onChanged: _enable ? (bool value) {
+                    setState(() {
+                      print('State: $value');
+                      _selected1 = value;
+                    });
+                  } : null,
+          ),
+          new FilterChip(
+            label: new Text(label + ' f2'),
+            selected: _selected1,
             avatar: avatar,
-            selected: _selected,
-            onChanged: (bool value) {
-              print('Select Pressed');
-              setState(() {
-                _selected = value;
-              });
-            },
+            onChanged: _enable
+                ? (bool value) {
+                    setState(() {
+                      _selected1 = value;
+                    });
+                  }
+                : null,
           ),
         ],
       ),
@@ -317,7 +374,14 @@ class _MyHomePageState extends State<MyHomePage> {
             label: new Text(label),
             avatar: avatar,
             onPressed: () {
-              print('Action Pressed');
+              setState(() {
+                _actionToggle = !_actionToggle;
+              });
+            },
+          ),
+          new ActionChip(
+            label: new Text(label),
+            onPressed: () {
               setState(() {
                 _actionToggle = !_actionToggle;
               });
@@ -327,9 +391,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       new Row(
         children: <Widget>[
-          new Container(color: _actionToggle ? Colors.red : Colors.green, width: 30.0, height: 30.0),
+          new Container(
+              color: _actionToggle ? Colors.red : Colors.green,
+              width: 30.0,
+              height: 30.0),
           new Flexible(child: new Container()),
-          new Container(color: _deleteToggle ? Colors.blue : Colors.purple, width: 30.0, height: 30.0),
+          new Container(
+              color: _deleteToggle ? Colors.blue : Colors.purple,
+              width: 30.0,
+              height: 30.0),
         ],
       ),
     ];
@@ -339,7 +409,11 @@ class _MyHomePageState extends State<MyHomePage> {
       child: new Theme(
         data: theme1,
         child: new DefaultTextStyle(
-          style: new TextStyle(color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
+          style: new TextStyle(
+              color: Colors.white,
+              fontSize: 14.0,
+              fontFamily: 'Roboto',
+              fontStyle: FontStyle.normal),
           child: new Scaffold(
             key: scaffoldKey,
             appBar: new AppBar(
@@ -353,7 +427,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: new SliderTheme(
                   data: theme2,
                   child: new MediaQuery(
-                    data: MediaQuery.of(context).copyWith(textScaleFactor: _size),
+                    data:
+                        MediaQuery.of(context).copyWith(textScaleFactor: _size),
                     child: new ListView(
                       padding: new EdgeInsets.all(20.0),
                       children: tiles,
