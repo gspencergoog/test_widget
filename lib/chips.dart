@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _deleteToggle = false;
   bool _selected = false;
   bool _selected1 = false;
-  bool _activated = false;
+  bool _showDelete = false;
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
@@ -258,11 +258,11 @@ class _MyHomePageState extends State<MyHomePage> {
         _rtl ? "קלט צ'יפ" : 'Input Chip',
         <Widget>[
           new InputChip(
-            label: new Text(label + ' i1'),
+            label: new Text(label),
             avatar: _selected1 ? avatar : null,
             selected: _selected,
             isEnabled: _enable,
-            onChanged: (bool value) {
+            onSelected: (bool value) {
               setState(() {
                 _selected = value;
               });
@@ -282,20 +282,25 @@ class _MyHomePageState extends State<MyHomePage> {
             label: new Text(label),
             avatar: _selected1 ? avatar : null,
             isEnabled: _enable,
-            onDeleted: () {
+            onPressed: () {
+              setState(() {
+                _actionToggle = !_actionToggle;
+              });
+            },
+            onDeleted:true ? () {
               setState(() {
                 _deleteToggle = !_deleteToggle;
               });
-            },
+            } : null,
           ),
           new InputChip(
             label: new Text(label),
             isEnabled: _enable,
-            onDeleted: () {
+            onDeleted: _showDelete ? () {
               setState(() {
                 _deleteToggle = !_deleteToggle;
               });
-            },
+            } : null,
           ),
           new InputChip(
             label: new Text(label),
@@ -314,22 +319,22 @@ class _MyHomePageState extends State<MyHomePage> {
           new ChoiceChip(
             label: new Text(label),
             avatar: avatar,
-            activated: _activated,
-            onChanged: _enable
+            selected: _selected,
+            onSelected: _enable
                 ? (bool value) {
                     setState(() {
-                      _activated = value;
+                      _selected = value;
                     });
                   }
                 : null,
           ),
           new ChoiceChip(
             label: new Text(label),
-            activated: !_activated,
-            onChanged: _enable
+            selected: !_selected,
+            onSelected: _enable
                 ? (bool value) {
                     setState(() {
-                      _activated = !value;
+                      _selected = value;
                     });
                   }
                 : null,
@@ -340,13 +345,13 @@ class _MyHomePageState extends State<MyHomePage> {
         _rtl ? 'שבב מסנן' : 'Filter Chip',
         <Widget>[
           new FilterChip(
-            label: new Text(label + ' f1'),
+            label: new Text(label),
             avatar: new BackdropFilter(
               child: avatar,
               filter: new ui.ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
             ),
             selected: _selected1,
-            onChanged: _enable ? (bool value) {
+            onSelected: _enable ? (bool value) {
                     setState(() {
                       print('State: $value');
                       _selected1 = value;
@@ -354,13 +359,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   } : null,
           ),
           new FilterChip(
-            label: new Text(label + ' f2'),
-            selected: _selected1,
+            label: new Text(label),
+            selected: _showDelete,
             avatar: avatar,
-            onChanged: _enable
+            onSelected: _enable
                 ? (bool value) {
                     setState(() {
-                      _selected1 = value;
+                      _showDelete = value;
                     });
                   }
                 : null,
