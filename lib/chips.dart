@@ -235,17 +235,22 @@ class _MyHomePageState extends State<MyHomePage> {
           new Chip(
             label: new Text(label),
           ),
-          new Chip(
-            label: new Text(label),
-            onDeleted: () {
-              setState(() {
-                _deleteToggle = !_deleteToggle;
-              });
-            },
+          new GestureDetector(
+            onTap: () => print('tapped'),
+            child: new Chip(
+              label: new Text(label),
+              onDeleted: () {
+                setState(() {
+                  _deleteToggle = !_deleteToggle;
+                });
+              },
+            ),
           ),
           new Chip(
             label: new Text(label),
             avatar: avatar,
+//            labelPadding: new EdgeInsets.only(top:30.0, bottom: 30.0),
+            //avatarPadding: new EdgeInsets.all(5.0),
             onDeleted: () {
               setState(() {
                 _deleteToggle = !_deleteToggle;
@@ -287,20 +292,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 _actionToggle = !_actionToggle;
               });
             },
-            onDeleted:true ? () {
-              setState(() {
-                _deleteToggle = !_deleteToggle;
-              });
-            } : null,
+            onDeleted: _showDelete
+                ? () {
+                    setState(() {
+                      _deleteToggle = !_deleteToggle;
+                    });
+                  }
+                : null,
           ),
           new InputChip(
             label: new Text(label),
             isEnabled: _enable,
-            onDeleted: _showDelete ? () {
-              setState(() {
-                _deleteToggle = !_deleteToggle;
-              });
-            } : null,
+            onDeleted: _showDelete
+                ? () {
+                    setState(() {
+                      _deleteToggle = !_deleteToggle;
+                    });
+                  }
+                : null,
           ),
           new InputChip(
             label: new Text(label),
@@ -334,7 +343,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onSelected: _enable
                 ? (bool value) {
                     setState(() {
-                      _selected = value;
+                      _selected = !value;
                     });
                   }
                 : null,
@@ -351,12 +360,14 @@ class _MyHomePageState extends State<MyHomePage> {
               filter: new ui.ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
             ),
             selected: _selected1,
-            onSelected: _enable ? (bool value) {
+            onSelected: _enable
+                ? (bool value) {
                     setState(() {
                       print('State: $value');
                       _selected1 = value;
                     });
-                  } : null,
+                  }
+                : null,
           ),
           new FilterChip(
             label: new Text(label),
