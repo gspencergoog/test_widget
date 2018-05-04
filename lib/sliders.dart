@@ -67,8 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final SliderThemeData controlTheme = SliderTheme.of(context).copyWith(
           thumbColor: Colors.grey[50],
           activeTickMarkColor: Colors.deepPurple[200],
-          activeRailColor: Colors.deepPurple[300],
-          inactiveRailColor: Colors.grey[50],
+          activeTrackColor: Colors.deepPurple[300],
+          inactiveTrackColor: Colors.grey[50],
         );
 
     return new PreferredSize(

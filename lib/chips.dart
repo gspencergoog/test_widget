@@ -19,6 +19,22 @@ final Map<int, Color> m2SwatchColors = <int, Color>{
 final MaterialColor m2Swatch =
     new MaterialColor(m2SwatchColors[500].value, m2SwatchColors);
 
+final Map<int, Color> m2DarkSwatchColors = <int, Color>{
+  50: const Color(0xff0d0d0d),
+  100: const Color(0xff1a1a1a),
+  200: const Color(0xff333333),
+  300: const Color(0xff4d4d4d),
+  400: const Color(0xff666666),
+  500: const Color(0xff808080),
+  600: const Color(0xff999999),
+  700: const Color(0xffb3b3b3),
+  800: const Color(0xffcccccc),
+  900: const Color(0xffe6e6e6),
+};
+final MaterialColor m2DarkSwatch =
+new MaterialColor(m2DarkSwatchColors[700].value, m2DarkSwatchColors);
+
+
 void main() {
   runApp(new MyApp());
 }
@@ -52,6 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _slowAnimations = false;
   bool _rtl = false;
   bool _longText = false;
+  bool _darkTheme = false;
+
   bool _actionToggle = false;
   bool _deleteToggle = false;
   bool _selected = false;
@@ -66,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         new Checkbox(
+          activeColor: _darkTheme ? m2DarkSwatchColors[500] : m2SwatchColors[500],
           onChanged: onChanged,
           value: value,
 //          activeMargin: const EdgeInsets.all(13.0),
@@ -90,8 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final SliderThemeData controlTheme = SliderTheme.of(context).copyWith(
           thumbColor: Colors.grey[50],
           activeTickMarkColor: Colors.deepPurple[200],
-          activeRailColor: Colors.deepPurple[300],
-          inactiveRailColor: Colors.grey[50],
+          activeTrackColor: Colors.deepPurple[300],
+          inactiveTrackColor: Colors.grey[50],
         );
 
     return new PreferredSize(
@@ -132,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             new Wrap(
-              alignment: WrapAlignment.center,
+              alignment: WrapAlignment.start,
               children: [
                 _buildCheckbox(
                   onChanged: (bool checked) {
@@ -178,19 +197,32 @@ class _MyHomePageState extends State<MyHomePage> {
                   value: _longText,
                   label: 'Long Label',
                 ),
-                new MaterialButton(
-                  onPressed: () {
+                _buildCheckbox(
+                  onChanged: (bool checked) {
                     setState(() {
-                      _size = 1.0;
-                      _enable = true;
-                      _slowAnimations = false;
-                      _rtl = false;
-                      _longText = false;
+                      _darkTheme = checked;
                     });
                   },
-                  child: new Text(
-                    'Reset',
-                    style: new TextStyle(color: Colors.grey[50]),
+                  value: _darkTheme,
+                  label: 'Dark Theme',
+                ),
+                new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new RaisedButton(
+                    color: Colors.black54,
+                    onPressed: () {
+                      setState(() {
+                        _size = 1.0;
+                        _enable = true;
+                        _slowAnimations = false;
+                        _rtl = false;
+                        _longText = false;
+                      });
+                    },
+                    child: new Text(
+                      'Reset',
+                      style: new TextStyle(color: Colors.grey[50]),
+                    ),
                   ),
                 ),
               ],
@@ -217,10 +249,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme1 = new ThemeData(
-      primarySwatch: m2Swatch,
+    ThemeData theme = new ThemeData(
+      primarySwatch: _darkTheme ? m2DarkSwatch : m2Swatch,
+      brightness: _darkTheme ? Brightness.dark : Brightness.light,
+      primaryColor: _darkTheme ? m2DarkSwatchColors[900] : null,
     );
-    SliderThemeData theme2 = theme1.sliderTheme;
+    ChipThemeData chipTheme = theme.chipTheme.copyWith(secondarySelectedColor: _darkTheme ? Colors.white30 : theme.chipTheme.secondarySelectedColor);
     final String label = _rtl
         ? (_longText ? 'טיילור, מהנדס תוכנה בכיר' : 'טיילור')
         : (_longText ? 'Taylor, Senior Software Engineer' : 'Taylor');
@@ -233,7 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _rtl ? 'שְׁבָב' : 'M1 Chip',
         <Widget>[
           new Chip(
-            label: new Text(label),
+            label: new Text(label, softWrap: false,),
           ),
           new GestureDetector(
             onTap: () => print('tapped'),
@@ -249,8 +283,8 @@ class _MyHomePageState extends State<MyHomePage> {
           new Chip(
             label: new Text(label),
             avatar: avatar,
-//            labelPadding: new EdgeInsets.only(top:30.0, bottom: 30.0),
-            //avatarPadding: new EdgeInsets.all(5.0),
+            padding: EdgeInsets.zero,
+            //labelPadding: new EdgeInsets.all(10.0),
             onDeleted: () {
               setState(() {
                 _deleteToggle = !_deleteToggle;
@@ -357,7 +391,7 @@ class _MyHomePageState extends State<MyHomePage> {
             label: new Text(label),
             avatar: new BackdropFilter(
               child: avatar,
-              filter: new ui.ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+              filter: new ui.ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
             ),
             selected: _selected1,
             onSelected: _enable
@@ -423,7 +457,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return new SafeArea(
       child: new Theme(
-        data: theme1,
+        data: theme,
         child: new DefaultTextStyle(
           style: new TextStyle(
               color: Colors.white,
@@ -433,15 +467,15 @@ class _MyHomePageState extends State<MyHomePage> {
           child: new Scaffold(
             key: scaffoldKey,
             appBar: new AppBar(
-              title: new Text('M2 Chips'),
+              title: new Text('M2 Chips', style: chipTheme.labelStyle),
               bottom: _buildControls(context),
               backgroundColor: const Color(0xff323232),
             ),
             body: new Directionality(
               textDirection: _rtl ? TextDirection.rtl : TextDirection.ltr,
               child: new Scrollbar(
-                child: new SliderTheme(
-                  data: theme2,
+                child: new ChipTheme(
+                  data: chipTheme,
                   child: new MediaQuery(
                     data:
                         MediaQuery.of(context).copyWith(textScaleFactor: _size),

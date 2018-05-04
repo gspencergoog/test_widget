@@ -4,6 +4,8 @@ description: A new Flutter project.
 dependencies:
   flutter:
     sdk: flutter
+  image: ^1.0.30
+  #path_provider: any
 
 dev_dependencies:
   flutter_test:
@@ -23,11 +25,6 @@ flutter:
   
   assets:
     - assets/taylor.png
-
-sky_engine:
-  path: ../engine/src/out/host_debug_unopt/gen/dart-pkg/sky_engine
-sky_services:
-  path: ../engine/src/out/host_debug_unopt/gen/dart-pkg/sky_services
 
   # To add assets to your application, add an assets section, like this:
   # assets:
