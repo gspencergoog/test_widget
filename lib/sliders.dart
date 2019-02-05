@@ -45,6 +45,50 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
+/// A Widget that sets the title text color for its children, while
+/// leaving all other ambient attributes alone.
+class TitleColorTheme extends StatelessWidget {
+  TitleColorTheme({Key key, this.child, this.titleColor}) : super(key: key);
+
+  final Color titleColor;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
+    // The partialTheme is very incomplete: just replacing theme.textTheme with that
+    // wouldn't do what we want.
+    TextTheme partialTheme = new TextTheme(title: new TextStyle(color: titleColor));
+    theme = Theme.of(context).copyWith(textTheme: theme.textTheme.merge(partialTheme));
+    print('partial: $partialTheme\nfull: ${theme.textTheme.title.color}');
+    return new Theme(data: theme, child: child);
+  }
+}
+
+/// A Widget that sets the title text color for its children, while
+/// leaving all other ambient attributes alone.
+class TitleColorThemeCopy extends StatelessWidget {
+  TitleColorThemeCopy({Key key, this.child, this.titleColor}) : super(key: key);
+
+  final Color titleColor;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
+    theme = theme.copyWith(
+      textTheme: theme.textTheme.copyWith(
+        title: theme.textTheme.title.copyWith(
+          color: titleColor,
+        ),
+      ),
+    );
+    return new Theme(data: theme, child: child);
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   double _size = 1.0;
   bool _enable = true;
@@ -75,136 +119,141 @@ class _MyHomePageState extends State<MyHomePage> {
       preferredSize: const Size.fromHeight(150.0),
       child: new Padding(
         padding: new EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 10.0),
-        child: new Column(
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new Row(
-                children: <Widget>[
-                  new Text(
-                    'Text Scale',
-                    style: new TextStyle(color: Colors.grey[50]),
+        child: new TitleColorThemeCopy(
+          titleColor: const Color(0xffff0000),
+          child: new Builder(builder: (BuildContext context) {
+            return new Column(
+              children: <Widget>[
+                new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new Row(
+                    children: <Widget>[
+                      new Text(
+                        'Text Scale',
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      new Expanded(
+                        child: new SliderTheme(
+                          data: controlTheme,
+                          child: new Slider(
+                              label: '$_size',
+                              min: 0.5,
+                              max: 3.0,
+                              //divisions: 18 * 2,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _size = value;
+                                });
+                              },
+                              value: _size),
+                        ),
+                      ),
+                      new Text(
+                        "${_size.toStringAsFixed(3)}",
+                        style: new TextStyle(color: Colors.grey[50]),
+                      ),
+                    ],
                   ),
-                  new Expanded(
-                    child: new SliderTheme(
-                      data: controlTheme,
-                      child: new Slider(
-                          label: '$_size',
-                          min: 0.5,
-                          max: 3.0,
-                          //divisions: 18 * 2,
-                          onChanged: (double value) {
+                ),
+                new Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    new Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        new Checkbox(
+                          onChanged: (bool checked) {
                             setState(() {
-                              _size = value;
+                              _enable = checked;
                             });
                           },
-                          value: _size),
+                          value: _enable,
+                        ),
+                        new Text(
+                          'Enabled',
+                          style: new TextStyle(color: Colors.grey[50]),
+                        ),
+                      ],
                     ),
-                  ),
-                  new Text(
-                    "${_size.toStringAsFixed(3)}",
-                    style: new TextStyle(color: Colors.grey[50]),
-                  ),
-                ],
-              ),
-            ),
-            new Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
+                    new Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        new Checkbox(
+                          onChanged: (bool checked) {
+                            setState(() {
+                              _slowAnimations = checked;
+                            });
+                            new Future.delayed(new Duration(milliseconds: 150)).then((dynamic _) {
+                              if (_slowAnimations) {
+                                timeDilation = 20.0;
+                              } else {
+                                timeDilation = 1.0;
+                              }
+                            });
+                          },
+                          value: _slowAnimations,
+                        ),
+                        new Text(
+                          'Slow',
+                          style: new TextStyle(color: Colors.grey[50]),
+                        ),
+                      ],
+                    ),
+                    new Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        new Checkbox(
+                          onChanged: (bool checked) {
+                            setState(() {
+                              _rtl = checked;
+                            });
+                          },
+                          value: _rtl,
+                        ),
+                        new Text(
+                          'RTL',
+                          style: new TextStyle(color: Colors.grey[50]),
+                        ),
+                      ],
+                    ),
+                    new Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        new Checkbox(
+                          onChanged: (bool checked) {
+                            setState(() {
+                              _longText = checked;
+                            });
+                          },
+                          value: _longText,
+                        ),
+                        new Text(
+                          'Long Label',
+                          style: new TextStyle(color: Colors.grey[50]),
+                        ),
+                      ],
+                    ),
+                    new MaterialButton(
+                      onPressed: () {
                         setState(() {
-                          _enable = checked;
+                          _size = 1.0;
+                          _enable = true;
+                          _slowAnimations = false;
+                          _longText = false;
+                          sliderValue = 0.0;
+                          testValue = 1;
                         });
                       },
-                      value: _enable,
-                    ),
-                    new Text(
-                      'Enabled',
-                      style: new TextStyle(color: Colors.grey[50]),
-                    ),
-                  ],
-                ),
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _slowAnimations = checked;
-                        });
-                        new Future.delayed(new Duration(milliseconds: 150)).then((dynamic _) {
-                          if (_slowAnimations) {
-                            timeDilation = 20.0;
-                          } else {
-                            timeDilation = 1.0;
-                          }
-                        });
-                      },
-                      value: _slowAnimations,
-                    ),
-                    new Text(
-                      'Slow',
-                      style: new TextStyle(color: Colors.grey[50]),
+                      child: new Text(
+                        'Reset',
+                        style: new TextStyle(color: Colors.grey[50]),
+                      ),
                     ),
                   ],
-                ),
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _rtl = checked;
-                        });
-                      },
-                      value: _rtl,
-                    ),
-                    new Text(
-                      'RTL',
-                      style: new TextStyle(color: Colors.grey[50]),
-                    ),
-                  ],
-                ),
-                new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Checkbox(
-                      onChanged: (bool checked) {
-                        setState(() {
-                          _longText = checked;
-                        });
-                      },
-                      value: _longText,
-                    ),
-                    new Text(
-                      'Long Label',
-                      style: new TextStyle(color: Colors.grey[50]),
-                    ),
-                  ],
-                ),
-                new MaterialButton(
-                  onPressed: () {
-                    setState(() {
-                      _size = 1.0;
-                      _enable = true;
-                      _slowAnimations = false;
-                      _longText = false;
-                      sliderValue = 0.0;
-                      testValue = 1;
-                    });
-                  },
-                  child: new Text(
-                    'Reset',
-                    style: new TextStyle(color: Colors.grey[50]),
-                  ),
                 ),
               ],
-            ),
-          ],
+            );
+          }),
         ),
       ),
     );
@@ -240,6 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
             value: sliderValue),
         testValue,
       ),
+      Spacer(flex: 1),
       _wrapSlider(
         _rtl ? 'منفصله' : 'Discrete',
         new Slider(
@@ -251,19 +301,16 @@ class _MyHomePageState extends State<MyHomePage> {
             value: sliderValue),
         testValue,
       ),
+      Spacer(flex: 5),
       new Center(child: new Text('Set Value: $testValue')),
     ];
-    tiles = ListTile.divideTiles(context: context, tiles: tiles).toList();
+//    tiles = ListTile.divideTiles(context: context, tiles: tiles).toList();
 
     return new SafeArea(
       child: new Theme(
         data: theme1,
         child: new DefaultTextStyle(
-          style: new TextStyle(
-              color: Colors.white,
-              fontSize: 14.0,
-              fontFamily: 'Roboto',
-              fontStyle: FontStyle.normal),
+          style: new TextStyle(color: Colors.white, fontSize: 14.0, fontFamily: 'Roboto', fontStyle: FontStyle.normal),
           child: new Scaffold(
             key: scaffoldKey,
             appBar: new AppBar(
@@ -284,8 +331,8 @@ class _MyHomePageState extends State<MyHomePage> {
 //                      padding: const EdgeInsets.all(100.0),
 //                      viewInsets: const EdgeInsets.all(50.0),
 //                    ),
-                    child: new ListView(
-                      padding: new EdgeInsets.all(0.0),
+                    child: new Column(
+//                      padding: new EdgeInsets.all(0.0),
                       children: tiles,
                     ),
                   ),
